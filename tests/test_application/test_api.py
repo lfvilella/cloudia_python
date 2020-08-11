@@ -1,10 +1,10 @@
 import pytest
 
-from application import bot
+from application import urls
 from application import models
 
 
-client = bot.app.test_client()
+client = urls.app.test_client()
 
 
 @pytest.mark.usefixtures("use_db")
