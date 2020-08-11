@@ -56,3 +56,14 @@ def verify_user_input(user_message):
         return int(user_message)
     except ValueError:
         return "The message must be an integer!"
+
+
+def is_fizz_buzz(number):
+    if number % 5 == 0 and number % 3 == 0:
+        return 'Fizz-Buzz'
+    elif number % 3 == 0:
+        return 'Fizz'
+    elif number % 5 == 0:
+        return 'Buzz'
+    else:
+        return f"Number {number} is not fizzbuzz..."

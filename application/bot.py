@@ -47,7 +47,8 @@ def bot():
         bot_reply(sender, user_message)
         return flask.Response(response=user_message, status=200)
 
-    bot_reply(sender, "All is good for now!")
+    fizz_buzz = services.is_fizz_buzz(user_message)
+    bot_reply(sender, fizz_buzz)
     return flask.Response(response='OK', status=200)
 
 
