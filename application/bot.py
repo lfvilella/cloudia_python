@@ -8,7 +8,8 @@ app = flask.Flask(__name__)
 
 app.add_url_rule("/bot", view_func=bot_facebook.BotAPI.as_view("bot"))
 app.add_url_rule(
-    "/conversation/<conversation_id>", view_func=api.ConversationAPI.as_view("conversation")
+    "/conversation/<conversation_id>",
+    view_func=api.ConversationAPI.as_view("conversation")
 )
 
 
