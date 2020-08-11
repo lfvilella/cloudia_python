@@ -60,10 +60,10 @@ def verify_user_input(user_message):
 
 def is_fizz_buzz(number):
     if number % 5 == 0 and number % 3 == 0:
-        return 'Fizz-Buzz'
+        return "Fizz-Buzz"
     elif number % 3 == 0:
-        return 'Fizz'
+        return "Fizz"
     elif number % 5 == 0:
-        return 'Buzz'
+        return "Buzz"
     else:
         return f"Number {number} is not fizzbuzz..."
