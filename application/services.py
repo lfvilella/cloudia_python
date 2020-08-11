@@ -46,3 +46,13 @@ def create_conversation(
 
     db.flush()
     return conversation
+
+
+def verify_user_input(user_message):
+    if len(user_message) > 280:
+        return "The message cannot exceed 280 characters!"
+
+    try:
+        return int(user_message)
+    except ValueError:
+        return "The message must be an integer!"
