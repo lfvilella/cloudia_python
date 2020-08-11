@@ -11,7 +11,7 @@ class ConversationAPI(MethodView):
     def _format_conversation(self, conversation):
         conversation.created_at = str(conversation.created_at)
         conversation.__dict__.pop("_sa_instance_state")
-        return conversation
+        return conversation.__dict__
 
     def get(self):
         conversation = services.get_conversation_by_id(
@@ -24,21 +24,8 @@ class ConversationAPI(MethodView):
         conversation = self._format_conversation(conversation)
 
         response = app.response_class(
-            response=flask.json.dumps(conversation.__dict__),
+            response=flask.json.dumps(conversation),
             status=200,
-            mimetype="application/json",
-        )
-        return response
-
-    def post(self):
-        data = dict(flask.request.form)
-        conversation = services.create_conversation(data)
-
-        conversation = self._format_conversation(conversation)
-
-        response = app.response_class(
-            response=flask.json.dumps(conversation.__dict__),
-            status=201,
             mimetype="application/json",
         )
         return response
