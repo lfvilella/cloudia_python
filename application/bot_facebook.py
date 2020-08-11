@@ -12,8 +12,11 @@ from . import services
 env = Env()
 load_dotenv(find_dotenv())
 
-FB_ACCESS_TOKEN = env("FB_ACCESS_TOKEN", None)
-FB_VERIFY_TOKEN = env("FB_VERIFY_TOKEN", None)
+def _get_verify_token():
+    return env("FB_VERIFY_TOKEN", None)
+
+def _get_access_token():
+    return env("FB_ACCESS_TOKEN", None)
 
 
 class BotAPI(MethodView):
@@ -22,7 +25,7 @@ class BotAPI(MethodView):
         Verify Token
         """
 
-        if flask.request.args.get("hub.verify_token") == FB_VERIFY_TOKEN:
+        if flask.request.args.get("hub.verify_token") == _get_verify_token():
             return flask.request.args.get("hub.challenge")
         return flask.Response(response={"Wrong Verify Token"}, status=400)
 
@@ -31,11 +34,16 @@ class BotAPI(MethodView):
             "recipient": {"id": sender},
             "message": {"text": message},
         }
-        requests.post(
+        response = requests.post(
             "https://graph.facebook.com/v2.6/me/messages/?access_token="
-            + FB_ACCESS_TOKEN,
+            + _get_access_token(),
             json=payload,
         )
+        data = {
+            'recipient_id': response.json()['recipient_id'],
+            'message_id': response.json()['message_id']
+        }
+        return data
 
     def post(self):
         """

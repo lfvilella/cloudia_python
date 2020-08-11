@@ -1,5 +1,6 @@
 import urllib.parse
-import os
+
+import pytest
 
 from application import bot
 
@@ -7,6 +8,7 @@ from application import bot
 client = bot.app.test_client()
 
 
+@pytest.mark.usefixtures("mock_bot_facebook")
 class TestBot:
     def payload(self, message):
         return {
@@ -30,10 +32,9 @@ class TestBot:
             ],
         }
 
-    def test_verify_valid_token(self):
-        token = os.getenv("FB_VERIFY_TOKEN")
+    def test_verify_valid_token(self, mock_bot_facebook):
         query_string = urllib.parse.urlencode(
-            {"hub.verify_token": token, "hub.challenge": "2067462119"}
+            {"hub.verify_token": mock_bot_facebook["verify"], "hub.challenge": "2067462119"}
         )
 
         response = client.get(f"/bot?{query_string}")
