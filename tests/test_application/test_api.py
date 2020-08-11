@@ -26,7 +26,7 @@ class TestConversation:
 
     def test_get_conversation(self, create_fake_conversation):
         conversation = create_fake_conversation
-        response = client.get(f"/conversation?id={conversation.id}")
+        response = client.get(f"/conversation/{conversation.id}")
 
         assert response.status_code == 200
         assert response.json == {
@@ -38,5 +38,5 @@ class TestConversation:
         }
 
     def test_get_unexist_conversation(self):
-        response = client.get("/conversation?id=fakeid")
+        response = client.get("/conversation/fakeid")
         assert response.status_code == 404

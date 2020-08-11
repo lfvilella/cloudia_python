@@ -13,10 +13,8 @@ class ConversationAPI(MethodView):
         conversation.__dict__.pop("_sa_instance_state")
         return conversation.__dict__
 
-    def get(self):
-        conversation = services.get_conversation_by_id(
-            flask.request.values["id"]
-        )
+    def get(self, conversation_id):
+        conversation = services.get_conversation_by_id(conversation_id)
 
         if not conversation:
             return flask.Response(response={}, status=404)
