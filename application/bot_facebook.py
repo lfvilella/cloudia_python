@@ -31,7 +31,6 @@ class BotAPI(MethodView):
             "recipient": {"id": sender},
             "message": {"text": message},
         }
-
         requests.post(
             "https://graph.facebook.com/v2.6/me/messages/?access_token="
             + FB_ACCESS_TOKEN,
@@ -42,10 +41,16 @@ class BotAPI(MethodView):
         """
         Facebook Bot
         """
-        data = flask.request.json
-        sender = data["entry"][0]["messaging"][0]["sender"]["id"]
 
+        data = None
+        try:
+            data = flask.request.json
+        except TypeError as error:
+            return print(error)
+
+        sender = data["entry"][0]["messaging"][0]["sender"]["id"]
         text = data["entry"][0]["messaging"][0]["message"]["text"]
+
         user_message = services.verify_user_input(text)
         if not isinstance(user_message, int):
             self._bot_reply(sender, user_message)
@@ -53,4 +58,4 @@ class BotAPI(MethodView):
 
         fizz_buzz = services.is_fizz_buzz(user_message)
         self._bot_reply(sender, fizz_buzz)
-        return flask.Response(response="OK", status=200)
+        return flask.Response(response=fizz_buzz, status=200)
