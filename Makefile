@@ -23,7 +23,7 @@ cmd: start ## Access bash
 	@docker-compose exec app /bin/bash
 
 up: start ## Start Fastapi dev server
-	@docker-compose exec app python -m application.app
+	@docker-compose exec app python app.py
 
 start:
 	@docker-compose start

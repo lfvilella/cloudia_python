@@ -11,15 +11,15 @@ class Conversation(Base):
     __tablename__ = "conversations"
 
     id = sqlalchemy.Column(
-        sqlalchemy.String(36),
+        sqlalchemy.String,
         primary_key=True,
         unique=True,
         index=True,
         default=lambda: str(uuid.uuid4()),
     )
-    user_identifier = sqlalchemy.Column(sqlalchemy.String(280))
-    user_message = sqlalchemy.Column(sqlalchemy.String(280))
-    bot_reply = sqlalchemy.Column(sqlalchemy.String(280))
+    username = sqlalchemy.Column(sqlalchemy.String)
+    user_message = sqlalchemy.Column(sqlalchemy.String)
+    bot_reply = sqlalchemy.Column(sqlalchemy.String)
     created_at = sqlalchemy.Column(
         sqlalchemy.DateTime, default=datetime.datetime.utcnow()
     )

@@ -1,8 +1,6 @@
 **/**/__pycache__
 
-env
 venv
 .env
 
 sql_app.db
-sql_app_test.db
