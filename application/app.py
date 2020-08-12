@@ -12,7 +12,9 @@ models.Base.metadata.create_all(bind=database.get_engine())
 
 app = flask.Flask(__name__)
 
-app.add_url_rule("/facebook/bot", view_func=bot_facebook.BotAPI.as_view("facebook_bot"))
+app.add_url_rule(
+    "/facebook/bot", view_func=bot_facebook.BotAPI.as_view("facebook_bot")
+)
 app.add_url_rule(
     "/conversation/<conversation_id>",
     view_func=api.ConversationAPI.as_view("conversation"),
