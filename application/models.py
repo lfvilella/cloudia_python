@@ -17,7 +17,7 @@ class Conversation(Base):
         index=True,
         default=lambda: str(uuid.uuid4()),
     )
-    username = sqlalchemy.Column(sqlalchemy.String(280))
+    user_identifier = sqlalchemy.Column(sqlalchemy.String(280))
     user_message = sqlalchemy.Column(sqlalchemy.String(280))
     bot_reply = sqlalchemy.Column(sqlalchemy.String(280))
     created_at = sqlalchemy.Column(

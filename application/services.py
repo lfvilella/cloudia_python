@@ -21,13 +21,16 @@ class Conversation:
         return self._db.query(models.Conversation).get(_id)
 
     def create_conversation(
-        self, data: dict, persist: bool = True
+        self,
+        user_identifier: str,
+        user_message: str,
+        bot_reply: str,
+        persist: bool = True,
     ) -> models.Conversation:
-
         conversation = models.Conversation()
-        conversation.username = data["username"]
-        conversation.user_message = data["user_message"]
-        conversation.bot_reply = data["bot_reply"]
+        conversation.user_identifier = user_identifier
+        conversation.user_message = user_message
+        conversation.bot_reply = bot_reply
 
         self._db.add(conversation)
         if persist:

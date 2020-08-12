@@ -14,7 +14,7 @@ class TestConversation:
         session = session_maker()
 
         conversation = models.Conversation(
-            username="fakeusername",
+            user_identifier="fakeuserid",
             user_message="Hello Bot!!!",
             bot_reply="The message must be an integer!",
         )
@@ -34,7 +34,7 @@ class TestConversation:
             "created_at": str(conversation.created_at),
             "id": conversation.id,
             "user_message": conversation.user_message,
-            "username": conversation.username,
+            "user_identifier": conversation.user_identifier,
         }
 
     def test_get_unexist_conversation(self):

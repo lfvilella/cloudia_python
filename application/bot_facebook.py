@@ -7,6 +7,7 @@ import flask
 from flask.views import MethodView
 
 from . import services
+from . import database
 
 
 env = Env()
@@ -68,4 +69,11 @@ class BotAPI(MethodView):
 
         fizz_buzz = services.Bot().is_fizz_buzz(user_message)
         self._bot_reply(sender, fizz_buzz)
+
+        # Saves conversation
+        with database.get_db() as db:
+            services.Conversation(db).create_conversation(
+                user_identifier=sender, user_message=text, bot_reply=fizz_buzz
+            )
+
         return flask.Response(response=fizz_buzz, status=200)

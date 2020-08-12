@@ -5,3 +5,4 @@ venv
 .env
 
 sql_app.db
+sql_app_test.db

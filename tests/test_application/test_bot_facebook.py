@@ -3,12 +3,13 @@ import urllib.parse
 import pytest
 
 from application import app
+from application import models
 
 
 client = app.app.test_client()
 
 
-@pytest.mark.usefixtures("mock_bot_facebook")
+@pytest.mark.usefixtures("mock_bot_facebook", "use_db")
 class TestBot:
     def payload(self, message):
         return {
@@ -46,6 +47,25 @@ class TestBot:
     def test_verify_invalid_token(self):
         response = client.get("/bot")
         assert response.status_code == 400
+
+    def test_saves_conversation_on_db(self, session_maker):
+        assert session_maker().query(models.Conversation).count() == 0
+        payload = self.payload("3")
+        client.post("/bot", json=payload)
+        assert session_maker().query(models.Conversation).count() == 1
+
+    def test_bot_reply_saves_on_db(self, session_maker):
+        payload = self.payload("3")
+        response = client.post("/bot", json=payload)
+
+        db_conversation = session_maker().query(models.Conversation).first()
+        assert db_conversation.bot_reply == response.data.decode()
+
+    def test_invalid_input_dont_saves_on_db(self, session_maker):
+        assert session_maker().query(models.Conversation).count() == 0
+        payload = self.payload("Hi Robot!!!")
+        client.post("/bot", json=payload)
+        assert session_maker().query(models.Conversation).count() == 0
 
     def test_bot_with_string_input(self):
         payload = self.payload("Hi Bot!!")
