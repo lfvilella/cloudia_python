@@ -2,10 +2,10 @@ import urllib.parse
 
 import pytest
 
-from application import bot
+from application import app
 
 
-client = bot.app.test_client()
+client = app.app.test_client()
 
 
 @pytest.mark.usefixtures("mock_bot_facebook")
