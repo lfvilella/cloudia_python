@@ -55,11 +55,13 @@ class TestBot:
         assert session_maker().query(models.Conversation).count() == 1
 
     def test_bot_reply_saves_on_db(self, session_maker):
-        payload = self.payload("3")
+        user_message = "3"
+        payload = self.payload(user_message)
         response = client.post("/bot", json=payload)
 
         db_conversation = session_maker().query(models.Conversation).first()
         assert db_conversation.bot_reply == response.data.decode()
+        assert db_conversation.user_message == user_message
 
     def test_invalid_input_dont_saves_on_db(self, session_maker):
         assert session_maker().query(models.Conversation).count() == 0
