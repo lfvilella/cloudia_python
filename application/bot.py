@@ -1,7 +1,13 @@
 import flask
 
+from . import models
+from . import database
 from . import api
 from . import bot_facebook
+
+
+# Create DB
+models.Base.metadata.create_all(bind=database.get_engine())
 
 
 app = flask.Flask(__name__)

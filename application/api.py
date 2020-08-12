@@ -2,9 +2,7 @@ import flask
 from flask.views import MethodView
 
 from . import services
-
-
-app = flask.Flask(__name__)
+from . import database
 
 
 class ConversationAPI(MethodView):
@@ -14,16 +12,14 @@ class ConversationAPI(MethodView):
         return conversation.__dict__
 
     def get(self, conversation_id):
-        conversation = services.get_conversation_by_id(conversation_id)
+        conversation = None
+        with database.get_db() as db:
+            conversation = services.Conversation(db).get_conversation_by_id(
+                conversation_id
+            )
 
         if not conversation:
             return flask.Response(response={}, status=404)
 
         conversation = self._format_conversation(conversation)
-
-        response = app.response_class(
-            response=flask.json.dumps(conversation),
-            status=200,
-            mimetype="application/json",
-        )
-        return response
+        return conversation, 200

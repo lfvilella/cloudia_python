@@ -12,8 +12,10 @@ from . import services
 env = Env()
 load_dotenv(find_dotenv())
 
+
 def _get_verify_token():
     return env("FB_VERIFY_TOKEN", None)
+
 
 def _get_access_token():
     return env("FB_ACCESS_TOKEN", None)
@@ -40,8 +42,8 @@ class BotAPI(MethodView):
             json=payload,
         )
         data = {
-            'recipient_id': response.json()['recipient_id'],
-            'message_id': response.json()['message_id']
+            "recipient_id": response.json()["recipient_id"],
+            "message_id": response.json()["message_id"],
         }
         return data
 
@@ -59,11 +61,11 @@ class BotAPI(MethodView):
         sender = data["entry"][0]["messaging"][0]["sender"]["id"]
         text = data["entry"][0]["messaging"][0]["message"]["text"]
 
-        user_message = services.verify_user_input(text)
+        user_message = services.Bot().verify_user_input(text)
         if not isinstance(user_message, int):
             self._bot_reply(sender, user_message)
             return flask.Response(response=user_message, status=200)
 
-        fizz_buzz = services.is_fizz_buzz(user_message)
+        fizz_buzz = services.Bot().is_fizz_buzz(user_message)
         self._bot_reply(sender, fizz_buzz)
         return flask.Response(response=fizz_buzz, status=200)

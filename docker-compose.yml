@@ -4,13 +4,15 @@ services:
     db:
         image: mysql:5.7
         restart: always
+        ports:
+            - "3306"
         environment:
-            MYSQL_DATABASE: ${MYSQL_DATABASE:-'db'}
-            MYSQL_USER: ${MYSQL_USER:-'user'}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD:-'password'}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-'password'}
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-bot_db}
+            MYSQL_USER: ${MYSQL_USER:-user}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+            MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
         volumes:
-            - ./env/db:/var/lib/mysql/data
+            - ./env/db:/var/lib/mysql
         networks:
             - app-newtwork
 
@@ -19,6 +21,8 @@ services:
         restart: ${DOCKER_RESTART:-no}
         depends_on:
             - db
+        links:
+            - db:db_mysql
         volumes:
             - ./:/app
         working_dir: /app
