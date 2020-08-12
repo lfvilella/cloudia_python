@@ -10,7 +10,9 @@ client = app.app.test_client()
 
 
 @pytest.mark.usefixtures("mock_bot_facebook", "use_db")
-class TestBot:
+class TestFacebookBot:
+    _URL = "/facebook/bot"
+
     def payload(self, message):
         return {
             "object": "page",
@@ -41,23 +43,23 @@ class TestBot:
             }
         )
 
-        response = client.get(f"/bot?{query_string}")
+        response = client.get(f"{self._URL}?{query_string}")
         assert response.status_code == 200
 
     def test_verify_invalid_token(self):
-        response = client.get("/bot")
+        response = client.get(self._URL)
         assert response.status_code == 400
 
     def test_saves_conversation_on_db(self, session_maker):
         assert session_maker().query(models.Conversation).count() == 0
         payload = self.payload("3")
-        client.post("/bot", json=payload)
+        client.post(self._URL, json=payload)
         assert session_maker().query(models.Conversation).count() == 1
 
     def test_bot_reply_saves_on_db(self, session_maker):
         user_message = "3"
         payload = self.payload(user_message)
-        response = client.post("/bot", json=payload)
+        response = client.post(self._URL, json=payload)
 
         db_conversation = session_maker().query(models.Conversation).first()
         assert db_conversation.bot_reply == response.data.decode()
@@ -66,27 +68,27 @@ class TestBot:
     def test_invalid_input_dont_saves_on_db(self, session_maker):
         assert session_maker().query(models.Conversation).count() == 0
         payload = self.payload("Hi Robot!!!")
-        client.post("/bot", json=payload)
+        client.post(self._URL, json=payload)
         assert session_maker().query(models.Conversation).count() == 0
 
     def test_bot_with_string_input(self):
         payload = self.payload("Hi Bot!!")
-        response = client.post("/bot", json=payload)
+        response = client.post(self._URL, json=payload)
         assert response.data.decode() == "The message must be an integer!"
 
     def test_bot_with_fizz_input(self):
         payload = self.payload("3")
-        response = client.post("/bot", json=payload)
+        response = client.post(self._URL, json=payload)
         assert response.data.decode() == "Fizz"
 
     def test_bot_with_buzz_input(self):
         payload = self.payload("5")
-        response = client.post("/bot", json=payload)
+        response = client.post(self._URL, json=payload)
         assert response.data.decode() == "Buzz"
 
     def test_bot_with_fizz_buzz_input(self):
         payload = self.payload("15")
-        response = client.post("/bot", json=payload)
+        response = client.post(self._URL, json=payload)
         assert response.data.decode() == "Fizz-Buzz"
 
     def test_bot_with_size_gt_280(self):
@@ -99,7 +101,7 @@ class TestBot:
             " nulla pariatur. Excepteur sint occaecat cupidatat non proident,"
             " sunt in culpa qui officia deserunt mollit anim id est laborum."
         )
-        response = client.post("/bot", json=payload)
+        response = client.post(self._URL, json=payload)
         assert (
             response.data.decode()
             == "The message cannot exceed 280 characters!"
