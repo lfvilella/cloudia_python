@@ -12,4 +12,4 @@ class TestFizzBuzz:
         assert services.Bot().is_fizz_buzz(5) == "Buzz"
 
     def test_with_fizz_buzz_number(self):
-        assert services.Bot().is_fizz_buzz(15) == "Fizz-Buzz"
+        assert services.Bot().is_fizz_buzz(15) == "FizzBuzz"

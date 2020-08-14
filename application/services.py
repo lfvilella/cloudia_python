@@ -1,18 +1,6 @@
 from . import models
 
 
-class ServicesException(Exception):
-    """ Services Exception
-    This error is raised when data passed to the function is not valid
-    """
-
-    pass
-
-
-class ValidationError(ServicesException):
-    pass
-
-
 class Conversation:
     def __init__(self, db):
         self._db = db
@@ -27,6 +15,7 @@ class Conversation:
         bot_reply: str,
         persist: bool = True,
     ) -> models.Conversation:
+
         conversation = models.Conversation()
         conversation.user_identifier = user_identifier
         conversation.user_message = user_message
@@ -51,11 +40,6 @@ class Bot:
             return "The message must be an integer!"
 
     def is_fizz_buzz(self, number: int) -> str:
-        if number % 5 == 0 and number % 3 == 0:
-            return "Fizz-Buzz"
-        elif number % 3 == 0:
-            return "Fizz"
-        elif number % 5 == 0:
-            return "Buzz"
-        else:
-            return f"Number {number} is not fizzbuzz..."
+        buzz = "Buzz" if number % 5 == 0 else ""
+        fizz = "Fizz" if number % 3 == 0 else ""
+        return f"{fizz}{buzz}" or f"Number {number} is not fizzbuzz..."

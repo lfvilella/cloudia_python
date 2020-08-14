@@ -1,11 +1,11 @@
 import flask
-from flask.views import MethodView
+from flask import views
 
 from . import services
 from . import database
 
 
-class ConversationAPI(MethodView):
+class ConversationAPI(views.MethodView):
     def _format_conversation(self, conversation):
         conversation.created_at = str(conversation.created_at)
         conversation.__dict__.pop("_sa_instance_state")

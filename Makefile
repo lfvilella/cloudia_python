@@ -16,6 +16,9 @@ build: delete-container ## Build the container
 test: start ## Run tests
 	@docker-compose exec app pytest
 
+flake8: start ## Run tests
+	@docker-compose exec app flake8 .
+
 restart: ## Restart the container
 	@docker-compose restart
 

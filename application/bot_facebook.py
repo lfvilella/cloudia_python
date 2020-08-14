@@ -1,28 +1,21 @@
-from environs import Env
-from dotenv import load_dotenv
-from dotenv import find_dotenv
-
 import requests
 import flask
-from flask.views import MethodView
+from flask import views
 
 from . import services
 from . import database
-
-
-env = Env()
-load_dotenv(find_dotenv())
+from . import settings
 
 
 def _get_verify_token():
-    return env("FB_VERIFY_TOKEN", None)
+    return settings.FB_VERIFY_TOKEN
 
 
 def _get_access_token():
-    return env("FB_ACCESS_TOKEN", None)
+    return settings.FB_ACCESS_TOKEN
 
 
-class BotAPI(MethodView):
+class BotAPI(views.MethodView):
     def get(self):
         """
         Verify Token
