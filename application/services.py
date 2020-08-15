@@ -134,7 +134,11 @@ class TelegramBot(ServiceBot):
         tries += 1
 
         url = f"{self._base_url}/setWebhook"
-        data = {"url": self._get_local_bot_endpoint()}
+        webhook_url = self._get_local_bot_endpoint()
+        if not webhook_url:
+            return
+
+        data = {"url": webhook_url}
         response = requests.post(url, json=data)
 
         if not response.ok or not response.json()["ok"]:
