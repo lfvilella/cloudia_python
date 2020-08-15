@@ -1,4 +1,5 @@
 import abc
+import time
 
 import requests
 
@@ -130,14 +131,19 @@ class TelegramBot(ServiceBot):
         if self._webhook_started:
             return
 
-        self._webhook_started = True
+        tries += 1
 
         url = f"{self._base_url}/setWebhook"
         data = {"url": self._get_local_bot_endpoint()}
-
         response = requests.post(url, json=data)
+
         if not response.ok or not response.json()["ok"]:
+            if response.status_code == 429 and tries < 10:
+                time.sleep(5)
+                return self._start_webhook(tries)
             raise ServiceException("Unable to set hook")
+
+        self._webhook_started = True
 
     def _bot_reply(self, bot_reply_message, message_data):
         url = f"{self._base_url}/sendMessage"
