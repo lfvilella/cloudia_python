@@ -11,32 +11,45 @@ client = app.app.test_client()
 class TestConversation:
     @pytest.fixture
     def create_fake_conversation(self, session_maker):
-        session = session_maker()
+        def create():
+            session = session_maker()
 
-        conversation = models.Conversation(
-            user_identifier="fakeuserid",
-            user_message="Hello Bot!!!",
-            bot_reply="The message must be an integer!",
-        )
+            conversation = models.Conversation(
+                user_identifier="fakeuserid",
+                user_message="Hello Bot!!!",
+                bot_reply="The message must be an integer!",
+            )
 
-        session.add(conversation)
-        session.flush()
-        session.commit()
-        return conversation
+            session.add(conversation)
+            session.flush()
+            session.commit()
+            return conversation
 
-    def test_get_conversation(self, create_fake_conversation):
-        conversation = create_fake_conversation
-        response = client.get(f"/conversation/{conversation.id}")
+        return create
+
+    def test_list_conversations(self, create_fake_conversation):
+        conversation1 = create_fake_conversation()
+        conversation2 = create_fake_conversation()
+        response = client.get("/conversations")
 
         assert response.status_code == 200
         assert response.json == {
-            "bot_reply": conversation.bot_reply,
-            "created_at": str(conversation.created_at),
-            "id": conversation.id,
-            "user_message": conversation.user_message,
-            "user_identifier": conversation.user_identifier,
+            "data": [
+                {
+                    "bot_reply": conversation1.bot_reply,
+                    "created_at": str(conversation1.created_at),
+                    "id": conversation1.id,
+                    "source": None,
+                    "user_identifier": conversation1.user_identifier,
+                    "user_message": conversation1.user_message,
+                },
+                {
+                    "bot_reply": conversation2.bot_reply,
+                    "created_at": str(conversation2.created_at),
+                    "id": conversation2.id,
+                    "source": None,
+                    "user_identifier": conversation2.user_identifier,
+                    "user_message": conversation2.user_message,
+                },
+            ]
         }
-
-    def test_get_unexist_conversation(self):
-        response = client.get("/conversation/fakeid")
-        assert response.status_code == 404

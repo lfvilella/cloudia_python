@@ -7,7 +7,6 @@ from application import models
 client = app.app.test_client()
 
 _URL = "/telegram/bot"
-_TELEGRAM_TOKEN = "1192916972:AAEvZGLAeZbpMzcuTLwdc_tQheHJ0a-P35M"
 
 
 @pytest.mark.usefixtures("mock_bot_telegram", "use_db")
@@ -40,20 +39,16 @@ class TestTelegramBot:
             },
         }
 
-    def test_verify_valid_token(self):
-        response = client.get(_URL + _TELEGRAM_TOKEN)
-        assert response.status_code == 200
-
     def test_saves_conversation_on_db(self, session_maker):
         assert session_maker().query(models.Conversation).count() == 0
         payload = self.payload("3")
-        client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        client.post(_URL, json=payload)
         assert session_maker().query(models.Conversation).count() == 1
 
     def test_bot_reply_saves_on_db(self, session_maker):
         user_message = "3"
         payload = self.payload(user_message)
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
 
         db_conversation = session_maker().query(models.Conversation).first()
         assert db_conversation.bot_reply == response.data.decode()
@@ -62,32 +57,32 @@ class TestTelegramBot:
     def test_invalid_input_dont_saves_on_db(self, session_maker):
         assert session_maker().query(models.Conversation).count() == 0
         payload = self.payload("Hi Robot!!!")
-        client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        client.post(_URL, json=payload)
         assert session_maker().query(models.Conversation).count() == 0
 
     def test_bot_with_string_input(self):
         payload = self.payload("Hi Bot!!")
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
         assert response.data.decode() == "The message must be an integer!"
 
     def test_bot_with_not_fizz_buzz_input(self):
         payload = self.payload("1")
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
         assert response.data.decode() == "Number 1 is not fizzbuzz..."
 
     def test_bot_with_fizz_input(self):
         payload = self.payload("3")
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
         assert response.data.decode() == "Fizz"
 
     def test_bot_with_buzz_input(self):
         payload = self.payload("5")
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
         assert response.data.decode() == "Buzz"
 
     def test_bot_with_fizz_buzz_input(self):
         payload = self.payload("15")
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
         assert response.data.decode() == "FizzBuzz"
 
     def test_bot_with_size_gt_280(self):
@@ -100,14 +95,8 @@ class TestTelegramBot:
             " nulla pariatur. Excepteur sint occaecat cupidatat non proident,"
             " sunt in culpa qui officia deserunt mollit anim id est laborum."
         )
-        response = client.post(_URL + _TELEGRAM_TOKEN, json=payload)
+        response = client.post(_URL, json=payload)
         assert (
             response.data.decode()
             == "The message cannot exceed 280 characters!"
         )
-
-
-@pytest.mark.usefixtures("mock_token_inexistent")
-def test_verify_invalid_token():
-    response = client.get(_URL + "fake")
-    assert response.status_code == 400

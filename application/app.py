@@ -5,7 +5,6 @@ from . import database
 from . import api
 from . import bot_facebook
 from . import bot_telegram
-from . import settings
 
 
 # Create DB
@@ -22,18 +21,9 @@ app.add_url_rule(
 app.add_url_rule(
     "/telegram/bot", view_func=bot_telegram.BotAPI.as_view("telegram_bot")
 )
-app.add_url_rule(
-    "/telegram/bot<token>",
-    view_func=bot_telegram.BotAPI.as_view("telegram_bot_post"),
-)
-app.add_url_rule(
-    f"/telegram/bot{settings.TELEGRAM_TOKEN}",
-    view_func=bot_telegram.BotAPI.as_view("recive_user_message")
-)
 
 app.add_url_rule(
-    "/conversation/<conversation_id>",
-    view_func=api.ConversationAPI.as_view("conversation"),
+    "/conversations", view_func=api.ConversationAPI.as_view("conversations"),
 )
 
 

@@ -8,4 +8,4 @@ COPY requirements* /app/
 
 RUN pip install --upgrade pip && pip install -r requirements-dev.txt
 
-CMD ["python", "app.py"]
+CMD ["python -m", "application.app"]

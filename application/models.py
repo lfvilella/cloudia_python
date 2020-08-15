@@ -20,6 +20,7 @@ class Conversation(Base):
     user_identifier = sqlalchemy.Column(sqlalchemy.String(280))
     user_message = sqlalchemy.Column(sqlalchemy.String(280))
     bot_reply = sqlalchemy.Column(sqlalchemy.String(280))
+    source = sqlalchemy.Column(sqlalchemy.String(20))
     created_at = sqlalchemy.Column(
         sqlalchemy.DateTime, default=datetime.datetime.utcnow()
     )

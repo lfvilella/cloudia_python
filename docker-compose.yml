@@ -32,7 +32,16 @@ services:
         tty: true
         networks:
             - app-newtwork
+            - nginx-gateway
         command: ${RUNSERVER:-/bin/bash}
+        environment:
+            VIRTUAL_HOST: cloudia03.lfvilella.com
+            VIRTUAL_HOST_ALIAS: www.cloudia03.lfvilella.com
+            LETSENCRYPT_HOST: cloudia03.lfvilella.com,www.cloudia03.lfvilella.com
+            LETSENCRYPT_EMAIL: vilella.luisfelipe+cloudia03.lfvilella.com@gmail.com
 
 networks:
     app-newtwork:
+    nginx-gateway:
+        external:
+            name: nginx-gateway

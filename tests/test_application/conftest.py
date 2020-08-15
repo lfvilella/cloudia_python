@@ -2,7 +2,7 @@ import unittest.mock
 import pytest
 import uuid
 
-from application import bot_telegram
+from application import services
 
 
 @pytest.fixture
@@ -12,12 +12,14 @@ def mock_bot_facebook():
         "verify": str(uuid.uuid4()),
     }
     with unittest.mock.patch("requests.post"):
-        with unittest.mock.patch(
-            "application.bot_facebook._get_access_token",
+        with unittest.mock.patch.object(
+            services.FacebookBot,
+            "_get_access_token",
             return_value=data["access"],
         ):
-            with unittest.mock.patch(
-                "application.bot_facebook._get_verify_token",
+            with unittest.mock.patch.object(
+                services.FacebookBot,
+                "_get_verify_token",
                 return_value=data["verify"],
             ):
                 yield data
@@ -27,22 +29,14 @@ def mock_bot_facebook():
 def mock_bot_telegram():
     access = "1192916972:AAEvZGLAeZbpMzcuTLwdc_tQheHJ0a-P35M"  # tester bot
     fake_url = "https://fakeurl.com/telegram/bot"
-    with unittest.mock.patch(
-        "application.bot_telegram._get_access_token", return_value=access,
-    ):
-        with unittest.mock.patch(
-            "application.bot_telegram._get_url", return_value=fake_url,
+
+    with unittest.mock.patch("requests.post"):
+        with unittest.mock.patch.object(
+            services.TelegramBot, "_get_access_token", return_value=access
         ):
             with unittest.mock.patch.object(
-                bot_telegram.BotAPI, "_bot_reply", return_value=None
+                services.TelegramBot,
+                "_get_local_bot_endpoint",
+                return_value=fake_url,
             ):
                 yield access
-
-
-@pytest.fixture
-def mock_token_inexistent():
-    access = "0092916972:AAEvZGLAeZbpMzcuTLwdc_tQh35eHJ0a-P3"  # fake
-    with unittest.mock.patch(
-        "application.bot_telegram._get_access_token", return_value=access,
-    ):
-        yield access

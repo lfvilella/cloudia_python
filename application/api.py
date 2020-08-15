@@ -1,4 +1,3 @@
-import flask
 from flask import views
 
 from . import services
@@ -11,15 +10,11 @@ class ConversationAPI(views.MethodView):
         conversation.__dict__.pop("_sa_instance_state")
         return conversation.__dict__
 
-    def get(self, conversation_id):
-        conversation = None
+    def get(self):
+        conversations = []
         with database.get_db() as db:
-            conversation = services.Conversation(db).get_conversation_by_id(
-                conversation_id
-            )
-
-        if not conversation:
-            return flask.Response(response={}, status=404)
-
-        conversation = self._format_conversation(conversation)
-        return conversation, 200
+            conversations = [
+                self._format_conversation(c)
+                for c in services.Conversation(db).get_conversations()
+            ]
+        return {"data": conversations}, 200
