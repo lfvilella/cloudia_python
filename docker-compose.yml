@@ -35,10 +35,10 @@ services:
             - nginx-gateway
         command: ${RUNSERVER:-/bin/bash}
         environment:
-            VIRTUAL_HOST: cloudia03.lfvilella.com
-            VIRTUAL_HOST_ALIAS: www.cloudia03.lfvilella.com
-            LETSENCRYPT_HOST: cloudia03.lfvilella.com,www.cloudia03.lfvilella.com
-            LETSENCRYPT_EMAIL: vilella.luisfelipe+cloudia03.lfvilella.com@gmail.com
+            VIRTUAL_HOST: cloudia.lfvilella.com
+            VIRTUAL_HOST_ALIAS: www.cloudia.lfvilella.com
+            LETSENCRYPT_HOST: cloudia.lfvilella.com,www.cloudia.lfvilella.com
+            LETSENCRYPT_EMAIL: vilella.luisfelipe+cloudia.lfvilella.com@gmail.com
 
 networks:
     app-newtwork:
