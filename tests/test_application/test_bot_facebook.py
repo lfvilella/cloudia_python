@@ -48,7 +48,7 @@ class TestFacebookBot:
 
     def test_verify_invalid_token(self):
         response = client.get(self._URL)
-        assert response.status_code == 400
+        assert response.data.decode() == "Wrong Verify Token"
 
     def test_saves_conversation_on_db(self, session_maker):
         assert session_maker().query(models.Conversation).count() == 0
