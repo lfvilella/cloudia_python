@@ -32,7 +32,25 @@ Iremos avaliar a qualidade do código sob todos os aspectos. Listamos aqui algun
 - Escreva código limpo e claro.
 - Respeite os dialetos das linguagens.
 - Utilizar padrões bem estabelecidos para resolver os problemas propostos.
-- Priorize suas atividades levando em consideração: 
-    - Entrega dos requisitos mínimos > Qualidade do código > Testes unitários > Deploy na AWS. 
+- Priorize suas atividades levando em consideração:
+    - Entrega dos requisitos mínimos > Qualidade do código > Testes unitários > Deploy na AWS.
 - Sempre que julgar importante, utilize bibliotecas de código aberto que possam te ajudar no desenvolvimento.
 Collapse
+
+
+# Running Locally
+
+1) Clone the project :)
+2) Set your credentials on .env
+3) make build
+4) make up
+
+## Bot running
+
+Bot Facebbok: [click here](https://m.me/427453708173711)
+
+![facebook_bot](https://user-images.githubusercontent.com/45940140/90322215-e3653200-df27-11ea-883c-6db8a666294c.gif)
+
+Bot Telegram: [click here](https://web.telegram.org/#/im?p=@cloudia_fizzbuzz_bot)
+
+![telegram_bot](https://user-images.githubusercontent.com/45940140/90322240-6d14ff80-df28-11ea-8fdf-6dfb877c91a5.gif)
